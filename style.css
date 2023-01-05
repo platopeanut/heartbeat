@@ -1,0 +1,28 @@
+.content {
+    font-weight: bold;
+    text-align: center;
+    background-image: linear-gradient( 135deg, #FFF3B0 10%, #CA26FF 100%);
+    -webkit-background-clip: text;
+  	color: transparent;
+}
+
+.title {
+    padding: 30px;
+    font-weight: bold;
+    text-align: center;
+    font-size: x-large;
+    /* background: linear-gradient(to bottom, #3498db, #2980b9, #3498db); */
+    /* background: linear-gradient(to bottom, #f0610e, #e8771a, #fff34a); */
+    background-image: linear-gradient(135deg, #5EFCE8 10%, #736EFE 100%);
+  	-webkit-background-clip: text;
+  	color: transparent;
+}
+
+ul {
+    text-align: center;
+    list-style-type: none;
+}
+
+ul > li {
+    padding: 5px;
+}
