@@ -1,8 +1,3 @@
-/*
-此源码是基于 XgpNwb 的二次修改
-Github：https://github.com/NianBroken/Firework_Simulator
-Gitee：https://gitee.com/nianbroken/Firework_Simulator
-*/
 'use strict';
 console.clear();
 
@@ -104,7 +99,6 @@ function toggleFullscreen() {
 
 // Sync fullscreen changes with store. An event listener is necessary because the user can
 // toggle fullscreen mode directly through the browser, and we want to react to that.
-// The language of this project was translated into Chinese by Nianbroken
 fscreen.addEventListener('fullscreenchange', () => {
 	store.setState({ fullscreen: isFullscreen() });
 });
@@ -122,7 +116,7 @@ const store = {
 	state: {
 		// will be unpaused in init()
 		paused: true,
-		soundEnabled: true,
+		soundEnabled: false,
 		menuOpen: false,
 		openHelpTopic: null,
 		fullscreen: isFullscreen(),
@@ -137,7 +131,7 @@ const store = {
 					? '1.2' // Profile header default (doesn't need to be an int)
 					: '2', // Mobile default
 			autoLaunch: true,
-			finale: true,
+			finale: false,
 			skyLighting: SKY_LIGHT_NORMAL + '',
 			hideControls: IS_HEADER,
 			longExposure: false,
@@ -305,44 +299,44 @@ const scaleFactorSelector = () => store.state.config.scaleFactor;
 // Help Content
 const helpContent = {
 	shellType: {
-		header: '烟花类型',
-		body: '你要放的烟花的类型，选择“随机（Random）”可以获得非常好的体验！'
+		header: 'Shell Type',
+		body: 'The type of firework that will be launched. Select "Random" for a nice assortment!'
 	},
 	shellSize: {
-		header: '烟花大小',
-		body: '烟花越大绽放范围就越大，但是烟花越大，设备所需的性能也会增多，大的烟花可能导致你的设备卡顿。'
+		header: 'Shell Size',
+		body: 'The size of the fireworks. Modeled after real firework shell sizes, larger shells have bigger bursts with more stars, and sometimes more complex effects. However, larger shells also require more processing power and may cause lag.'
 	},
 	quality: {
-		header: '画质',
-		body: '如果动画运行不流畅，你可以试试降低画质。画质越高，烟花绽放后的火花数量就越多，但高画质可能导致你的设备卡顿。'
+		header: 'Quality',
+		body: 'Overall graphics quality. If the animation is not running smoothly, try lowering the quality. High quality greatly increases the amount of sparks rendered and may cause lag.'
 	},
 	skyLighting: {
-		header: '照亮天空',
-		body: '烟花爆炸时，背景会被照亮。如果你的屏幕看起来太亮了，可以把它改成“暗”或者“不”。'
+		header: 'Sky Lighting',
+		body: 'Illuminates the background as fireworks explode. If the background looks too bright on your screen, try setting it to "Dim" or "None".'
 	},
 	scaleFactor: {
-		header: '缩放',
-		body: '使你与烟花离得更近或更远。对于较大的烟花，你可以选择更小的缩放值，尤其是在手机或平板电脑上。'
+		header: 'Scale',
+		body: 'Allows scaling the size of all fireworks, essentially moving you closer or farther away. For larger shell sizes, it can be convenient to decrease the scale a bit, especially on phones or tablets.'
 	},
 	autoLaunch: {
-		header: '自动放烟花',
-		body: '开启后你就可以坐在你的设备屏幕前面欣赏烟花了，你也可以关闭它，但关闭后你就只能通过点击屏幕的方式来放烟花。'
+		header: 'Auto Fire',
+		body: 'Launches sequences of fireworks automatically. Sit back and enjoy the show, or disable to have full control.'
 	},
 	finaleMode: {
-		header: '同时放更多的烟花',
-		body: '可以在同一时间自动放出更多的烟花（但需要开启先开启“自动放烟花”）。'
+		header: 'Finale Mode',
+		body: 'Launches intense bursts of fireworks. May cause lag. Requires "Auto Fire" to be enabled.'
 	},
 	hideControls: {
-		header: '隐藏控制按钮',
-		body: '隐藏屏幕顶部的按钮。如果你要截图，或者需要一个无缝的体验，你就可以将按钮隐藏，隐藏按钮后你仍然可以在右上角打开设置。'
+		header: 'Hide Controls',
+		body: 'Hides the translucent controls along the top of the screen. Useful for screenshots, or just a more seamless experience. While hidden, you can still tap the top-right corner to re-open this menu.'
 	},
 	fullscreen: {
-		header: '全屏',
-		body: '切换至全屏模式'
+		header: 'Fullscreen',
+		body: 'Toggles fullscreen mode.'
 	},
 	longExposure: {
-		header: '保留烟花的火花',
-		body: '可以保留烟花留下的火花'
+		header: 'Open Shutter',
+		body: 'Experimental effect that preserves long streaks of light, similar to leaving a camera shutter open.'
 	}
 };
 
@@ -825,15 +819,15 @@ function init() {
 	appNodes.shellSize.innerHTML = options;
 	
 	setOptionsForSelect(appNodes.quality, [
-		{ label: '低', value: QUALITY_LOW },
-		{ label: '正常', value: QUALITY_NORMAL },
-		{ label: '高', value: QUALITY_HIGH }
+		{ label: 'Low', value: QUALITY_LOW },
+		{ label: 'Normal', value: QUALITY_NORMAL },
+		{ label: 'High', value: QUALITY_HIGH }
 	]);
 	
 	setOptionsForSelect(appNodes.skyLighting, [
-		{ label: '不', value: SKY_LIGHT_NONE },
-		{ label: '暗', value: SKY_LIGHT_DIM },
-		{ label: '正常', value: SKY_LIGHT_NORMAL }
+		{ label: 'None', value: SKY_LIGHT_NONE },
+		{ label: 'Dim', value: SKY_LIGHT_DIM },
+		{ label: 'Normal', value: SKY_LIGHT_NORMAL }
 	]);
 	
 	// 0.9 is mobile default
@@ -1391,7 +1385,6 @@ function render(speed) {
 	// Draw queued burst flashes
 	// These must also be drawn using source-over due to Safari. Seems rendering the gradients using lighten draws large black boxes instead.
 	// Thankfully, these burst flashes look pretty much the same either way.
-	// The language of this project was translated into Chinese by Nianbroken
 	while (BurstFlash.active.length) {
 		const bf = BurstFlash.active.pop();
 		
@@ -1970,7 +1963,6 @@ class Shell {
 			// but when smaller shells are auto-fired, they will sound smaller. It doesn't sound great
 			// when a value too small is given though, so instead of basing it on proportions, we just
 			// look at the difference in size and map it to a range known to sound good.
-			// The language of this project was translated into Chinese by Nianbroken
 			const maxDiff = 2;
 			const sizeDifferenceFromMaxSize = Math.min(maxDiff, shellSizeSelector() - this.shellSize);
 			const soundScale = (1 - sizeDifferenceFromMaxSize / maxDiff) * 0.3 + 0.7;
@@ -2066,7 +2058,6 @@ const Star = {
 	},
 
 	// Public method for cleaning up and returning an instance back to the pool.
-	// Language translation of this project into Chinese by Nianbroken
 	returnInstance(instance) {
 		// Call onDeath handler if available (and pass it current star instance)
 		instance.onDeath && instance.onDeath(instance);
@@ -2301,7 +2292,7 @@ if (IS_HEADER) {
 	init();
 } else {
 	// Allow status to render, then preload assets and start app.
-	setLoadingStatus('正在点燃导火线');
+	setLoadingStatus('Lighting Fuses');
 	setTimeout(() => {
 		soundManager.preload()
 		.then(
